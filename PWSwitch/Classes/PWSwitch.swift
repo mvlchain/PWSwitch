@@ -138,7 +138,6 @@ open class PWSwitch: UIControl {
         get { return self._cornerRadius }
         set {
             self._cornerRadius = newValue
-            
             self.backLayer.cornerRadius = _cornerRadius
         }
     }
@@ -148,7 +147,6 @@ open class PWSwitch: UIControl {
         get { return self._thumbCornerRadius }
         set {
             self._thumbCornerRadius = newValue
-            
             self.thumbLayer.cornerRadius = _thumbCornerRadius
         }
     }
@@ -267,7 +265,7 @@ open class PWSwitch: UIControl {
     
     override public init(frame: CGRect) {
         self._thumbDiameter = 14
-        self._cornerRadius = 13
+        self._cornerRadius = 20
         self._thumbCornerRadius = 7
         self._shouldFillOnPush = true
         self._trackInset = 0
@@ -288,7 +286,7 @@ open class PWSwitch: UIControl {
     
     required public init(coder aDecoder: NSCoder) {
         self._thumbDiameter = 14
-        self._cornerRadius = 13
+        self._cornerRadius = 20
         self._thumbCornerRadius = 7
         self._shouldFillOnPush = true
         self._trackInset = 0
@@ -309,7 +307,7 @@ open class PWSwitch: UIControl {
     
     public init() {
         self._thumbDiameter = 14
-        self._cornerRadius = 13
+        self._cornerRadius = 20
         self._thumbCornerRadius = 7
         self._shouldFillOnPush = true
         self._trackInset = 0
@@ -387,8 +385,7 @@ open class PWSwitch: UIControl {
     
     override open func layoutSubviews() {
         super.layoutSubviews()
-        
-        backLayer.frame = CGRect(x: 0 + trackInset, y: 0 + trackInset, width: frame.width - trackInset*2.0, height: frame.height - trackInset*2.0)
+        backLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         
         labelOff.center = CGPoint(x: getThumbOffRect().midX, y: getThumbOffRect().midY)
         labelOn.center = CGPoint(x: getThumbOnRect().midX, y: getThumbOnRect().midY)
@@ -418,19 +415,19 @@ open class PWSwitch: UIControl {
     }
     
     fileprivate func getThumbOffPos() -> CGPoint {
-        return CGPoint(x: frame.origin.x, y: frame.height/2.0)
+        return CGPoint(x: frame.origin.x + 2, y: frame.height/2.0)
     }
     
     fileprivate func getThumbOffPushPos() -> CGPoint {
-        return CGPoint(x: frame.origin.x, y: frame.height/2.0)
+        return CGPoint(x: frame.origin.x - 2, y: frame.height/2.0)
     }
     
     fileprivate func getThumbOnPos() -> CGPoint {
-        return CGPoint(x: frame.origin.x + frame.width - thumbWidth, y: frame.height/2.0)
+        return CGPoint(x:frame.origin.x + frame.width - thumbWidth + 2, y: frame.height/2.0)
     }
     
     fileprivate func getThumbOnPushPos() -> CGPoint {
-        return CGPoint(x: frame.origin.x + frame.width - thumbWidth, y: frame.height/2.0)
+        return CGPoint(x: frame.origin.x + frame.width - thumbWidth + 6, y: frame.height/2.0)
     }
     
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -709,7 +706,7 @@ open class PWSwitch: UIControl {
         
         let thumbBoundsAnimation = CABasicAnimation(keyPath: "bounds")
         thumbBoundsAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.77, 0, 0.175, 1)
-        thumbBoundsAnimation.fromValue = NSValue(cgRect: getThumbOffPushRect())
+        thumbBoundsAnimation.fromValue = NSValue(cgRect: getThumbOnRect())
         thumbBoundsAnimation.toValue = NSValue(cgRect: getThumbOffRect())
         thumbBoundsAnimation.fillMode = kCAFillModeForwards
         thumbBoundsAnimation.duration = 0.25
@@ -750,6 +747,8 @@ open class PWSwitch: UIControl {
         
         labelOn.textColor = _onLabelColorForOff
         labelOff.textColor = _offLabelColorForOff
+        labelOff.center = CGPoint(x: getThumbOffRect().midX, y: getThumbOffRect().midY)
+        labelOn.center = CGPoint(x: getThumbOnRect().midX, y: getThumbOnRect().midY)
     }
     
     fileprivate func offToOnAnim() {
@@ -779,8 +778,8 @@ open class PWSwitch: UIControl {
         
         let thumbBoundsAnimation = CABasicAnimation(keyPath: "bounds")
         thumbBoundsAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.77, 0, 0.175, 1)
-        thumbBoundsAnimation.fromValue = NSValue(cgRect: getThumbOffPushRect())
-        thumbBoundsAnimation.toValue = NSValue(cgRect: getThumbOffRect())
+        thumbBoundsAnimation.fromValue = NSValue(cgRect: getThumbOffRect())
+        thumbBoundsAnimation.toValue = NSValue(cgRect: getThumbOnRect())
         thumbBoundsAnimation.fillMode = kCAFillModeForwards
         thumbBoundsAnimation.duration = 0.25
         thumbBoundsAnimation.isRemovedOnCompletion = false
@@ -820,6 +819,8 @@ open class PWSwitch: UIControl {
         
         labelOn.textColor = _onLabelColorForOn
         labelOff.textColor = _offLabelColorForOn
+        labelOff.center = CGPoint(x: getThumbOffRect().midX, y: getThumbOffRect().midY)
+        labelOn.center = CGPoint(x: getThumbOnRect().midX, y: getThumbOnRect().midY)
     }
     
     open func setOn(_ on: Bool, animated :Bool) {
