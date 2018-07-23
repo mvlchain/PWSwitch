@@ -825,46 +825,37 @@ open class PWSwitch: UIControl {
     
     open func setOn(_ on: Bool, animated :Bool) {
         self.on = on
-        
-        if (animated) {
-            if (on) {
-                let bgBorderAnimation = CABasicAnimation(keyPath: "borderWidth")
-                bgBorderAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.55, 0.055, 0.675, 0.19)
-                bgBorderAnimation.fromValue = 1
-                bgBorderAnimation.toValue = frame.height / 2
-                bgBorderAnimation.fillMode = kCAFillModeForwards
-                bgBorderAnimation.duration = 0.25
-                bgBorderAnimation.isRemovedOnCompletion = false
-                
-                backLayer.add(bgBorderAnimation, forKey: "bgAnimation")
-                
-                offToOnAnim()
-            } else {
-                onToOffAnim()
-            }
-        } else {
-            if (on) {
-                if (shouldFillOnPush) {
-                    backLayer.borderWidth = frame.height / 2
+        DispatchQueue.main.async {
+            if (animated) {
+                if (on) {
+                    self.offToOnAnim()
+                } else {
+                    self.onToOffAnim()
                 }
-                
-                backLayer.borderColor = trackOnBorderColor?.cgColor
-                
-                thumbLayer.position = getThumbOnPos()
-                thumbLayer.borderColor = thumbOnBorderColor?.cgColor
-                labelOn.textColor = _onLabelColorForOn
-                labelOff.textColor = _offLabelColorForOn
             } else {
-                if (shouldFillOnPush) {
-                    backLayer.borderWidth = 1
+                if (on) {
+                    if (self.shouldFillOnPush) {
+                        self.backLayer.borderWidth = self.frame.height / 2
+                    }
+                    
+                    self.backLayer.borderColor = self.trackOnBorderColor?.cgColor
+                    
+                    self.thumbLayer.position = self.getThumbOnPos()
+                    self.thumbLayer.borderColor = self.thumbOnBorderColor?.cgColor
+                    self.labelOn.textColor = self._onLabelColorForOn
+                    self.labelOff.textColor = self._offLabelColorForOn
+                } else {
+                    if (self.shouldFillOnPush) {
+                        self.backLayer.borderWidth = 1
+                    }
+                    
+                    self.backLayer.borderColor = self.trackOffFillColor?.cgColor
+                    
+                    self.thumbLayer.position = self.getThumbOffPos()
+                    self.thumbLayer.borderColor = self.thumbOffBorderColor?.cgColor
+                    self.labelOn.textColor = self._onLabelColorForOff
+                    self.labelOff.textColor = self._offLabelColorForOff
                 }
-                
-                backLayer.borderColor = trackOffFillColor?.cgColor
-                
-                thumbLayer.position = getThumbOffPos()
-                thumbLayer.borderColor = thumbOffBorderColor?.cgColor
-                labelOn.textColor = _onLabelColorForOff
-                labelOff.textColor = _offLabelColorForOff
             }
         }
     }
