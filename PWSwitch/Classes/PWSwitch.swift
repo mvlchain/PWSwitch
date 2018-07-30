@@ -838,23 +838,25 @@ open class PWSwitch: UIControl {
                         self.backLayer.borderWidth = self.frame.height / 2
                     }
                     
-                    self.backLayer.borderColor = self.trackOnBorderColor?.cgColor
-                    
                     self.thumbLayer.position = self.getThumbOnPos()
                     self.thumbLayer.borderColor = self.thumbOnBorderColor?.cgColor
+                    self.thumbLayer.backgroundColor = self.thumbOnFillColor?.cgColor
                     self.labelOn.textColor = self._onLabelColorForOn
                     self.labelOff.textColor = self._offLabelColorForOn
+                    self.backLayer.borderColor = self.trackOnBorderColor?.cgColor
+                    self.backLayer.backgroundColor = self.trackOnFillColor?.cgColor
                 } else {
                     if (self.shouldFillOnPush) {
                         self.backLayer.borderWidth = 1
                     }
                     
-                    self.backLayer.borderColor = self.trackOffFillColor?.cgColor
-                    
                     self.thumbLayer.position = self.getThumbOffPos()
                     self.thumbLayer.borderColor = self.thumbOffBorderColor?.cgColor
+                    self.thumbLayer.backgroundColor = self.thumbOffFillColor?.cgColor
                     self.labelOn.textColor = self._onLabelColorForOff
                     self.labelOff.textColor = self._offLabelColorForOff
+                    self.backLayer.borderColor = self.trackOffBorderColor?.cgColor
+                    self.backLayer.backgroundColor = self.trackOffFillColor?.cgColor
                 }
             }
         }
