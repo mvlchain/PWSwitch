@@ -194,6 +194,7 @@ open class PWSwitch: UIControl {
         get { return self._thumbWidth }
         set {
             self._thumbWidth = newValue
+            self.thumbLayer.frame = getThumbOffRect()
         }
     }
     fileprivate var _thumbWidth: CGFloat
@@ -201,9 +202,9 @@ open class PWSwitch: UIControl {
     @IBInspectable open dynamic var showLabel: Bool { // UI_APPEARANCE_SELECTOR
         get { return self._showLabel }
         set {
-            self._showLabel = showLabel
-            labelOn.isHidden = !showLabel
-            labelOff.isHidden = !showLabel
+            self._showLabel = newValue
+            self.labelOff.isHidden = !newValue
+            self.labelOn.isHidden = !newValue
         }
     }
     fileprivate var _showLabel: Bool
@@ -212,6 +213,7 @@ open class PWSwitch: UIControl {
         get { return self._offText }
         set {
             self._offText = newValue
+            self.labelOff.text = newValue
             self.labelOff.frame = CGRect(x: 0, y: 0, width: _offText.width(withConstrainedHeight: 40, font: _labelFont), height: 40)
         }
     }
@@ -237,6 +239,7 @@ open class PWSwitch: UIControl {
         get { return self._onText }
         set {
             self._onText = newValue
+            self.labelOn.text = newValue
             self.labelOn.frame = CGRect(x: 0, y: 0, width: _onText.width(withConstrainedHeight: 40, font: _labelFont), height: 40)
         }
     }
@@ -426,7 +429,7 @@ open class PWSwitch: UIControl {
     
     fileprivate func getThumbOffPushRect() -> CGRect {
         if showLabel {
-           return CGRect(x: (frame.height - thumbDiameter)/2.0, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
+            return CGRect(x: (frame.height - thumbDiameter)/2.0, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
         }
         return CGRect(x: (frame.height - thumbDiameter)/2.0, y: (frame.height - thumbDiameter)/2.0, width: thumbDiameter + thumbDelta, height: thumbDiameter)
     }
