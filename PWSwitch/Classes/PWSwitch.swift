@@ -198,6 +198,16 @@ open class PWSwitch: UIControl {
     }
     fileprivate var _thumbWidth: CGFloat
     
+    @IBInspectable open dynamic var showLabel: Bool { // UI_APPEARANCE_SELECTOR
+        get { return self._showLabel }
+        set {
+            self._showLabel = showLabel
+            labelOn.isHidden = !showLabel
+            labelOff.isHidden = !showLabel
+        }
+    }
+    fileprivate var _showLabel: Bool
+    
     @IBInspectable open dynamic var offText: String { // UI_APPEARANCE_SELECTOR
         get { return self._offText }
         set {
@@ -271,13 +281,14 @@ open class PWSwitch: UIControl {
         self._trackInset = 0
         self._shadowStrength = 1
         self._thumbWidth = 10
-        self._onText = "ON"
+        self._onText = ""
         self._onLabelColorForOn = .black
         self._onLabelColorForOff = .black
-        self._offText = "OFF"
+        self._offText = ""
         self._offLabelColorForOn = .black
         self._offLabelColorForOff = .black
         self._labelFont = UIFont(name: "AppleSDGothicNeo-Bold", size: 15)!
+        self._showLabel = false
         
         super.init(frame: frame)
         
@@ -292,13 +303,14 @@ open class PWSwitch: UIControl {
         self._trackInset = 0
         self._shadowStrength = 1
         self._thumbWidth = 14
-        self._onText = "ON"
+        self._onText = ""
         self._onLabelColorForOn = .black
         self._onLabelColorForOff = .black
-        self._offText = "OFF"
+        self._offText = ""
         self._offLabelColorForOn = .black
         self._offLabelColorForOff = .black
         self._labelFont = UIFont(name: "AppleSDGothicNeo-Bold", size: 15)!
+        self._showLabel = false
         
         super.init(coder: aDecoder)!
         
@@ -313,13 +325,14 @@ open class PWSwitch: UIControl {
         self._trackInset = 0
         self._shadowStrength = 1
         self._thumbWidth = 14
-        self._onText = "ON"
+        self._onText = ""
         self._onLabelColorForOn = .black
         self._onLabelColorForOff = .black
-        self._offText = "OFF"
+        self._offText = ""
         self._offLabelColorForOn = .black
         self._offLabelColorForOff = .black
         self._labelFont = UIFont(name: "AppleSDGothicNeo-Bold", size: 15)!
+        self._showLabel = false
         
         super.init(frame: CGRect.zero)
         
@@ -367,12 +380,14 @@ open class PWSwitch: UIControl {
         labelOff.textColor = _offLabelColorForOff
         labelOff.font = _labelFont
         labelOff.center = CGPoint(x: getThumbOffRect().midX, y: getThumbOffRect().midY)
+        labelOff.isHidden = !_showLabel
         
         labelOn = UILabel(frame: CGRect(x: 0, y: 0, width: _onText.width(withConstrainedHeight: 40, font: _labelFont), height: 26))
         labelOn.text = _onText
         labelOn.textColor = _onLabelColorForOff
         labelOn.font = _labelFont
         labelOn.center = CGPoint(x: getThumbOnRect().midX, y: getThumbOnRect().midY)
+        labelOn.isHidden = !_showLabel
         layer.addSublayer(thumbLayer)
         
         self.addSubview(labelOff)
@@ -403,31 +418,52 @@ open class PWSwitch: UIControl {
     }
     
     fileprivate func getThumbOffRect() -> CGRect {
-        return CGRect(x: 0, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
+        if showLabel {
+            return CGRect(x: 0, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
+        }
+        return CGRect(x: (frame.height - thumbDiameter)/2.0, y: (frame.height - thumbDiameter)/2.0, width: thumbDiameter, height: thumbDiameter)
     }
     
     fileprivate func getThumbOffPushRect() -> CGRect {
-        return CGRect(x: (frame.height - thumbDiameter)/2.0, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
+        if showLabel {
+           return CGRect(x: (frame.height - thumbDiameter)/2.0, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
+        }
+        return CGRect(x: (frame.height - thumbDiameter)/2.0, y: (frame.height - thumbDiameter)/2.0, width: thumbDiameter + thumbDelta, height: thumbDiameter)
     }
     
     fileprivate func getThumbOnRect() -> CGRect {
-        return CGRect(x: frame.width - thumbWidth, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
+        if showLabel {
+            return CGRect(x: frame.width - thumbWidth, y: (frame.height - thumbDiameter)/2.0, width: thumbWidth, height: thumbDiameter)
+        }
+        return CGRect(x: frame.width - thumbDiameter - ((frame.height - thumbDiameter)/2.0), y: (frame.height - thumbDiameter)/2.0, width: thumbDiameter, height: thumbDiameter)
     }
     
     fileprivate func getThumbOffPos() -> CGPoint {
-        return CGPoint(x: frame.origin.x + 2, y: frame.height/2.0)
+        if showLabel {
+            return CGPoint(x: frame.origin.x + 2, y: frame.height/2.0)
+        }
+        return CGPoint(x: frame.height/2.0, y: frame.height/2.0)
     }
     
     fileprivate func getThumbOffPushPos() -> CGPoint {
-        return CGPoint(x: frame.origin.x - 2, y: frame.height/2.0)
+        if showLabel {
+            return CGPoint(x: frame.origin.x - 2, y: frame.height/2.0)
+        }
+        return CGPoint(x: frame.height/2.0 + thumbDelta - 3, y: frame.height/2.0)
     }
     
     fileprivate func getThumbOnPos() -> CGPoint {
-        return CGPoint(x:frame.origin.x + frame.width - thumbWidth + 2, y: frame.height/2.0)
+        if showLabel {
+            return CGPoint(x:frame.origin.x + frame.width - thumbWidth + 2, y: frame.height/2.0)
+        }
+        return CGPoint(x: frame.width - frame.height/2.0, y: frame.height/2.0)
     }
     
     fileprivate func getThumbOnPushPos() -> CGPoint {
-        return CGPoint(x: frame.origin.x + frame.width - thumbWidth + 6, y: frame.height/2.0)
+        if showLabel {
+            return CGPoint(x: frame.origin.x + frame.width - thumbWidth + 6, y: frame.height/2.0)
+        }
+        return CGPoint(x: (frame.width - frame.height/2.0) - thumbDelta + 3, y: frame.height/2.0)
     }
     
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -825,39 +861,37 @@ open class PWSwitch: UIControl {
     
     open func setOn(_ on: Bool, animated :Bool) {
         self.on = on
-        DispatchQueue.main.async {
-            if (animated) {
-                if (on) {
-                    self.offToOnAnim()
-                } else {
-                    self.onToOffAnim()
-                }
+        if (animated) {
+            if (on) {
+                self.offToOnAnim()
             } else {
-                if (on) {
-                    if (self.shouldFillOnPush) {
-                        self.backLayer.borderWidth = self.frame.height / 2
-                    }
-                    
-                    self.thumbLayer.position = self.getThumbOnPos()
-                    self.thumbLayer.borderColor = self.thumbOnBorderColor?.cgColor
-                    self.thumbLayer.backgroundColor = self.thumbOnFillColor?.cgColor
-                    self.labelOn.textColor = self._onLabelColorForOn
-                    self.labelOff.textColor = self._offLabelColorForOn
-                    self.backLayer.borderColor = self.trackOnBorderColor?.cgColor
-                    self.backLayer.backgroundColor = self.trackOnFillColor?.cgColor
-                } else {
-                    if (self.shouldFillOnPush) {
-                        self.backLayer.borderWidth = 1
-                    }
-                    
-                    self.thumbLayer.position = self.getThumbOffPos()
-                    self.thumbLayer.borderColor = self.thumbOffBorderColor?.cgColor
-                    self.thumbLayer.backgroundColor = self.thumbOffFillColor?.cgColor
-                    self.labelOn.textColor = self._onLabelColorForOff
-                    self.labelOff.textColor = self._offLabelColorForOff
-                    self.backLayer.borderColor = self.trackOffBorderColor?.cgColor
-                    self.backLayer.backgroundColor = self.trackOffFillColor?.cgColor
+                self.onToOffAnim()
+            }
+        } else {
+            if (on) {
+                if (self.shouldFillOnPush) {
+                    self.backLayer.borderWidth = self.frame.height / 2
                 }
+                
+                self.thumbLayer.position = self.getThumbOnPos()
+                self.thumbLayer.borderColor = self.thumbOnBorderColor?.cgColor
+                self.thumbLayer.backgroundColor = self.thumbOnFillColor?.cgColor
+                self.labelOn.textColor = self._onLabelColorForOn
+                self.labelOff.textColor = self._offLabelColorForOn
+                self.backLayer.borderColor = self.trackOnBorderColor?.cgColor
+                self.backLayer.backgroundColor = self.trackOnFillColor?.cgColor
+            } else {
+                if (self.shouldFillOnPush) {
+                    self.backLayer.borderWidth = 1
+                }
+                
+                self.thumbLayer.position = self.getThumbOffPos()
+                self.thumbLayer.borderColor = self.thumbOffBorderColor?.cgColor
+                self.thumbLayer.backgroundColor = self.thumbOffFillColor?.cgColor
+                self.labelOn.textColor = self._onLabelColorForOff
+                self.labelOff.textColor = self._offLabelColorForOff
+                self.backLayer.borderColor = self.trackOffBorderColor?.cgColor
+                self.backLayer.backgroundColor = self.trackOffFillColor?.cgColor
             }
         }
     }
