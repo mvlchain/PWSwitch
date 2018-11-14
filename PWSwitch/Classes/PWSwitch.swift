@@ -398,7 +398,7 @@ open class PWSwitch: UIControl {
     }
     
     override open var intrinsicContentSize : CGSize {
-        return CGSize(width: 255, height: 40)
+        return CGSize(width: UIScreen.main.bounds.size.width * 0.733, height: 40)
     }
     
     override open func layoutSubviews() {
